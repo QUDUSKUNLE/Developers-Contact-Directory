@@ -26,8 +26,8 @@ const app = express();
 app.use(cors());
 app.use(require('morgan')('dev'));
 
-app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(expressValidator());
 
 if (!prod) {
@@ -41,8 +41,6 @@ mongoose.connect(process.env.DATABASE_HOST, {
 });
 
 app.use('/api/v1', routes);
-app.get('/', (req, res) => {
-  res.send('Simple CRUD for developers contact');
-});
+app.get('/', (req, res) => res.json('Welcome to DevelopersContact Home'));
 
 app.listen(port, () => console.log(`Server running on PORT ${port}`));

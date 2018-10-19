@@ -21,7 +21,7 @@ export default (req, res, next) => {
       if (error.message === 'jwt expired') {
         return res.status(401).json({ error: 'Token has expired' });
       }
-      return res.status(401).send(error);
+      return res.status(401).json(error);
     }
     req.decoded = decoded;
     next();
