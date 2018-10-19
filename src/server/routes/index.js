@@ -1,6 +1,7 @@
 
 import express from 'express';
 import UsersController from '../controllers/UsersController';
+import validateRequest from '../middlewares/validateRequest';
 import verifyToken from '../middlewares/verifyToken';
 
 
@@ -14,6 +15,7 @@ const route = express.Router();
  */
 route.post(
   '/signup',
+  validateRequest,
   UsersController.signUp,
 );
 
@@ -22,7 +24,7 @@ route.post(
  */
 route.post(
   '/signin',
-  // validateRequest,
+  validateRequest,
   UsersController.signIn,
 );
 
@@ -31,7 +33,7 @@ route.post(
  */
 route.post(
   '/passwords',
-  // validateRequest,
+  validateRequest,
   UsersController.resetPassword,
 );
 
@@ -40,7 +42,7 @@ route.post(
  */
 route.put(
   '/passwords/:hash',
-  // validateRequest,
+  validateRequest,
   UsersController.updatePassword,
 );
 
