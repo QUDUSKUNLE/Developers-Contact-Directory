@@ -1,0 +1,17 @@
+{
+  "name": "developerscontact",
+  "version": "1.0.0",
+  "description": "API that categories developer as either a front-end developer or backend developer",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Qudus Yekeen",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-react": "^7.11.1"
+  }
+}
