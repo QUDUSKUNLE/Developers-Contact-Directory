@@ -7,15 +7,25 @@ const SALT_WORK_FACTOR = 10;
  * @description This is User model
  */
 const userSchema = new mongoose.Schema({
-  username: { type: String, required: true, unique: true },
+  username: { type: String, required: true },
   password: { type: String, required: true },
   email: { type: String, required: true, unique: true },
+  address: { type: String },
+  location: { type: String },
+  developer: { type: Array, required: true },
+  stacks: { type: String },
   hash: { type: String },
   expiryTime: { type: Date },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });
 
+userSchema.index({
+  address: 'text',
+  developer: 'text',
+  location: 'text',
+  stacks: 'text',
+});
 
 userSchema.pre('save', function (next) {
   const user = this;
@@ -37,5 +47,5 @@ userSchema.methods.comparePassword = (candidatePassword, cb) => {
   });
 };
 
-const Users = mongoose.model('users', userSchema);
+const Users = mongoose.model('Users', userSchema);
 export default Users;
