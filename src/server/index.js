@@ -7,6 +7,8 @@ import expressValidator from 'express-validator';
 import errorHandler from 'errorhandler';
 import mongoose from 'mongoose';
 
+import routes from './routes/index';
+
 
 dotenv.config();
 
@@ -38,7 +40,7 @@ mongoose.connect(process.env.DATABASE_HOST, {
   useNewUrlParser: true,
 });
 
-
+app.use('/api/v1', routes);
 app.get('/', (req, res) => {
   res.send('Simple CRUD for developers contact');
 });
