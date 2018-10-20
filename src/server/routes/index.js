@@ -1,4 +1,5 @@
 
+import 'babel-polyfill';
 import express from 'express';
 import UsersController from '../controllers/UsersController';
 import validateRequest from '../middlewares/validateRequest';

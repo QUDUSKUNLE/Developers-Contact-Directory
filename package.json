@@ -4,18 +4,30 @@
     "description": "API that categories developer as either a front-end developer or backend developer",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "nodemon ."
+        "start": "nodemon .",
+        "test": "NODE_ENV=test nyc --reporter=text --reporter=html --reporter=lcov mocha src/server/test --timeout 40000 --exit --compilers js:babel-register && npm run coverage-report",
+        "coverage-report": "cat ./coverage/lcov.info | coveralls"
     },
     "author": "Qudus Yekeen",
     "license": "MIT",
     "devDependencies": {
+        "assert": "^1.4.1",
+        "cat": "^0.2.0",
+        "chai": "^4.2.0",
+        "chai-http": "^4.2.0",
+        "coveralls": "^3.0.0",
         "eslint-config-airbnb": "^17.1.0",
         "eslint-plugin-import": "^2.14.0",
         "eslint-plugin-jsx-a11y": "^6.1.2",
-        "eslint-plugin-react": "^7.11.1"
+        "eslint-plugin-react": "^7.11.1",
+        "istanbul": "^0.4.5",
+        "mocha": "^5.2.0",
+        "mocha-lcov-reporter": "^1.3.0",
+        "nyc": "^11.3.0",
+        "should": "^13.1.3"
     },
     "dependencies": {
+        "babel-polyfill": "^6.26.0",
         "babel-preset-env": "^1.7.0",
         "babel-register": "^6.26.0",
         "bcrypt": "^3.0.2",
