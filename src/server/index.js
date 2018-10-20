@@ -12,9 +12,6 @@ import routes from './routes/index';
 
 dotenv.config();
 
-// configure mongoose global
-mongoose.promise = global.Promise;
-
 // Configure production variable
 const prod = process.env.PRODUCTION;
 const port = process.env.PORT;
@@ -35,10 +32,8 @@ if (!prod) {
 }
 
 // configure mongoose database
-mongoose.connect(process.env.DATABASE_HOST, {
-  useCreateIndex: true,
-  useNewUrlParser: true,
-});
+mongoose.connect(process.env.DATABASE_HOST, { useMongoClient: true });
+mongoose.promise = global.Promise;
 
 app.use('/api/v1', routes);
 app.get('/', (req, res) => res.json('Welcome to DevelopersContact Home'));

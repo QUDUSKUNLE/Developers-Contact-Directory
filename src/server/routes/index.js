@@ -29,6 +29,41 @@ route.post(
 );
 
 /**
+ * Route to query for a user
+ */
+route.get(
+  '/developer/:id',
+  UsersController.developer
+);
+
+/**
+ * Route to get all users and search for users
+ */
+route.get(
+  '/developers',
+  UsersController.getDevelopers
+);
+
+/**
+ * Route for users to update profile
+ */
+route.put(
+  '/profiles',
+  verifyToken,
+  UsersController.updateProfile,
+);
+
+/**
+ * Route for a user to delete account
+ */
+route.delete(
+  '/users/:id',
+  verifyToken,
+  UsersController.deleteAccount,
+);
+
+
+/**
  * Route for users to request for password reset
  */
 route.post(
@@ -45,15 +80,5 @@ route.put(
   validateRequest,
   UsersController.updatePassword,
 );
-
-/**
- * Route for users to update profile
- */
-route.put(
-  '/profiles',
-  verifyToken,
-  UsersController.updateProfile,
-);
-
 
 export default route;

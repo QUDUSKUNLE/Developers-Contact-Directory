@@ -1,10 +1,12 @@
 import bcrypt from 'bcrypt';
-import capitalize from 'capitalize';
 import crypto from 'crypto';
 import dotenv from 'dotenv';
+
 import createToken from '../utils/createToken';
 import sendEmail from '../utils/sendEmail';
 import Users from '../models/Users';
+import pagination from '../helpers/pagination';
+import normalize from '../helpers/normalize';
 
 dotenv.config();
 
@@ -41,44 +43,28 @@ class UsersController {
               error: 'Email is already registered',
               success: false,
             });
-          } else {
-            Users.findOne({
-              username: capitalize(req.body.username),
-            })
-              .exec()
-              .then((username) => {
-                if (username) {
-                  res.status(409).json({
-                    error: 'Username already exist',
-                    success: false,
-                  });
-                } else {
-                  const user = new Users({
-                    username: capitalize(req.body.username),
-                    password: req.body.password,
-                    email: req.body.email,
-                  });
-                  user.save((error, newUser) => {
-                    if (error) {
-                      return res.status(500).json({
-                        success: false,
-                        message: error,
-                      });
-                    }
-                    return res.status(201).json({
-                      message: 'Sign up successful',
-                      id: newUser._id,
-                      success: true,
-                      token: createToken(newUser),
-                    });
-                  });
-                }
-              });
           }
+          const user = new Users({
+            username: normalize.text(req.body.username),
+            password: req.body.password,
+            email: req.body.email,
+          });
+          user.save((error, newUser) => {
+            if (error) {
+              return res.status(500).json({
+                success: false,
+                message: error,
+              });
+            }
+            return res.status(201).json({
+              message: 'Sign up successful',
+              success: true,
+              token: createToken(newUser),
+            });
+          });
         });
     }
   }
-
 
   /**
    * * Routes: POST: /api/v1/signin
@@ -120,12 +106,146 @@ class UsersController {
             message: 'Sign in successful',
             success: true,
             token: createToken(response),
-            id: response._id,
           });
         });
     }
   }
 
+  /**
+   * json Reset password email
+   * Routes: POST: /api/v1/developer/:id
+   * @param {any} req user request object
+   * @param {any} res server response
+   * @returns {response} response object
+   */
+  static developer(req, res) {
+    Users.findOne({ _id: req.params.id.trim() })
+      .exec((err, user) => {
+        if (err) {
+          return res.status(404).json({
+            success: false,
+            error: err.message,
+            message: 'User does not exist'
+          });
+        }
+        return res.status(200).json({
+          user: {
+            _id: user._id,
+            username: user.username,
+            address: user.address,
+            developer: user.developer,
+            location: user.location,
+            stacks: user.stacks
+          }
+        });
+      });
+  }
+
+  /**
+   * Routes: GET: /api/v1/developers?developers=searchquery&offset=A&limit=B
+   * @description This fetch all ideas created by a user
+   * @param {any} req user request object
+   * @param {any} res server response
+   * @return {void}
+   * @memberOf UsersController
+   */
+  static getDevelopers(req, res) {
+    const offset = parseInt(req.query.offset, 10);
+    const limit = parseInt(req.query.limit, 10);
+    let count;
+    if (req.query.developers === undefined) {
+      Users.count({
+      }, (err, isCount) => {
+        count = isCount;
+        Users.find({})
+          .skip(offset)
+          .limit(limit)
+          .exec((err, developers) => {
+            if (err) {
+              return res.status(503).json({
+                success: false,
+                error: err.message
+              });
+            }
+            return res.status(200).json({
+              developers: normalize.extractData(developers),
+              pageInfo: pagination(count, limit, offset)
+            });
+          });
+      });
+    } else {
+      Users.count({
+        developer: { $eq: normalize.text(req.query.developers.trim()) }
+      }, (err, isCount) => {
+        count = isCount;
+        Users.find({})
+          .where({
+            developer:
+            {
+              $eq: normalize.text(req.query.developers.trim())
+            }
+          })
+          .skip(offset)
+          .limit(limit)
+          .exec((err, developers) => {
+            if (err) {
+              return res.status(503).json({
+                success: false,
+                error: err.message
+              });
+            }
+            return res.status(200).json({
+              developers: normalize.extractData(developers),
+              pageInfo: pagination(count, limit, offset)
+            });
+          });
+      });
+    }
+  }
+
+  /**
+   * Routes: GET: /api/v1/users/:id
+   * @description This fetch all ideas created by a user
+   * @param {any} req user request object
+   * @param {any} res server response
+   * @return {void}
+   * @memberOf UsersController
+   */
+  static deleteAccount(req, res) {
+    if (
+      (req.params.id === undefined) ||
+      (req.params.id !== req.decoded.token.user._id)) {
+      return res.status(401).json({
+        success: false,
+        error: 'User`s not authorized to perform this operation'
+      });
+    }
+    Users.findById({ _id: req.decoded.token.user._id })
+      .exec()
+      .then((user) => {
+        if (user) {
+          Users.remove({
+            _id: req.decoded.token.user._id
+          }).then(() => res.status(202).send({
+            success: true,
+            message: 'Account deleted successfully'
+          })).catch(error => res.status(500).send({
+            success: false,
+            error: error.message
+          }));
+        }
+        if (!user) {
+          res.status(404).send({
+            success: false,
+            error: 'User does not exist'
+          });
+        }
+      }).catch(error => res.status(401).send({
+        success: false,
+        message: 'Unathorized, invalid user identity',
+        error: error.message
+      }));
+  }
 
   /**
    * json Reset password email
@@ -181,7 +301,6 @@ class UsersController {
         }).catch(error => res.status(500).send({ message: error }));
       }).catch(error => res.status(500).send({ message: error }));
   }
-
 
   /**
    * Update Password
@@ -254,7 +373,6 @@ class UsersController {
       }));
   }
 
-
   /**
    * Routes: PUT: /api/v1/profiles
    * @param {any} req user request object
@@ -282,11 +400,11 @@ class UsersController {
       { _id: req.decoded.token.user._id },
       {
         $set: {
-          username: capitalize(username.trim()),
+          username: normalize.text(username.trim()),
           address: address.trim(),
-          location: capitalize(location.trim()),
-          developer: capitalize(developer.trim()),
-          stacks: capitalize(stack.trim())
+          location: normalize.text(location.trim()),
+          developer: normalize.text(developer.trim()),
+          stacks: normalize.text(stack.trim())
         },
       },
       { new: true },
@@ -294,13 +412,11 @@ class UsersController {
       .exec((error, user) => {
         if (user) {
           return res.status(200).json({
-            user: {
-              id: user.id,
-              address: user.address,
-              developer: user.developer,
-              stacks: user.stacks,
-              location: user.location,
-            },
+            id: user.id,
+            address: user.address,
+            developer: user.developer,
+            stacks: user.stacks,
+            location: user.location,
             message: 'Profile updated successfully',
             success: true,
           });
