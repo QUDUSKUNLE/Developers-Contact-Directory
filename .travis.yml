@@ -1,0 +1,13 @@
+langauage: node_js
+
+node_js:
+  - 8.11.1
+
+before_install:
+  - travis_wait npm install
+
+cache:
+  - node_modules
+
+script:
+  - npm test
