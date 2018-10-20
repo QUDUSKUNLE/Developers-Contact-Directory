@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   address: { type: String },
   location: { type: String },
-  developer: { type: Array, required: true },
+  developer: { type: String },
   stacks: { type: String },
   hash: { type: String },
   expiryTime: { type: Date },
@@ -20,12 +20,7 @@ const userSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now },
 });
 
-userSchema.index({
-  address: 'text',
-  developer: 'text',
-  location: 'text',
-  stacks: 'text',
-});
+userSchema.index({ developer: 1, location: -1, stacks: -1 });
 
 userSchema.pre('save', function (next) {
   const user = this;
@@ -48,4 +43,5 @@ userSchema.methods.comparePassword = (candidatePassword, cb) => {
 };
 
 const Users = mongoose.model('Users', userSchema);
+
 export default Users;
