@@ -51,6 +51,7 @@ route.get(
 route.put(
   '/profiles',
   verifyToken,
+  validateRequest,
   UsersController.updateProfile,
 );
 
@@ -58,7 +59,7 @@ route.put(
  * Route for a user to delete account
  */
 route.delete(
-  '/users/:id',
+  '/developers/:id',
   verifyToken,
   UsersController.deleteAccount,
 );

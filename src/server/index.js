@@ -46,7 +46,7 @@ if (process.env.NODE_ENV === 'test') {
 }
 
 app.use('/api/v1', routes);
-app.get('/', (req, res) => res.json('Welcome to DevelopersContact Home'));
+app.get('/', (req, res) => res.status(200).json({ home: 'DevelopersContact Home' }));
 
 app.listen(port);
 
