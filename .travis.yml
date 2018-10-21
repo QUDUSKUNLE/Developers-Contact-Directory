@@ -1,7 +1,8 @@
 langauage: node_js
 
 node_js:
-  - 8.11.1
+  - 8.9.1
+  - 6.11.2
 
 before_install:
   - travis_wait npm install

@@ -31,14 +31,20 @@ if (!prod) {
   app.use(errorHandler());
 }
 
+mongoose.promise = global.Promise;
 // configure mongoose database
 if (process.env.NODE_ENV === 'test') {
-  mongoose.connect(process.env.MONGODB_URL_TEST, { useMongoClient: true });
-  mongoose.promise = global.Promise;
+  mongoose.connect(process.env.MONGODB_URL_TEST, {
+    useMongoClient: true,
+    autoReconnect: true
+  });
 } else {
-  mongoose.connect(process.env.MONGODB_URL, { useMongoClient: true });
-  mongoose.promise = global.Promise;
+  mongoose.connect(process.env.MONGODB_URL, {
+    useMongoClient: true,
+    autoReconnect: true
+  });
 }
+console.log(mongoose.version)
 
 app.use('/api/v1', routes);
 app.get('/', (req, res) => res.json('Welcome to DevelopersContact Home'));
