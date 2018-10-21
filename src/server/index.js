@@ -44,11 +44,10 @@ if (process.env.NODE_ENV === 'test') {
     autoReconnect: true
   });
 }
-console.log(mongoose.version)
 
 app.use('/api/v1', routes);
 app.get('/', (req, res) => res.json('Welcome to DevelopersContact Home'));
 
-app.listen(port, () => console.log(`Server running on PORT ${port}`));
+app.listen(port);
 
 module.exports = app;
