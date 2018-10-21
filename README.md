@@ -1,5 +1,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://choosealicense.com/licenses/mit/)
-[![Maintainability](https://api.codeclimate.com/v1/badges/07b73613abd04df3abac/maintainability)](https://codeclimate.com/github/QUDUSKUNLE/DevelopersContact/maintainability)
+[![Build Status](https://travis-ci.org/QUDUSKUNLE/Developers-Contact-Directory.svg?branch=master)](https://travis-ci.org/QUDUSKUNLE/Developers-Contact-Directory)
+
 ### DevelopersContant
 A simple CRUD that categories developer as either a front-end developer or backend developer
 
@@ -22,7 +23,7 @@ DevelopersContact allows users to do the following.
 
 ### Get Started
   Kindly follow the steps below to setup a local development environment.
-  + ```Clone``` this repository from a terminal ```git clone  https://github.com/QUDUSKUNLE/DevelopersContact/tree/develop```
+  + ```Clone``` this repository from a terminal ```git clone  https://github.com/QUDUSKUNLE/DevelopersContact```
 
   + ```cd``` into the project directory
 
@@ -33,19 +34,14 @@ DevelopersContact allows users to do the following.
   + Create ```.env``` file and set up the variables in ```.env-sample``` to your specified database connection gotten from ```mongoose```
    + Connet to database local by running `mongod` on terminal
 
-   + and run ```npm run start:dev``` for development and `npm start` for production
+   + and run `npm start` to run the application
 
-   + Go to ```http://localhost:3000/```
+   + Go to ```http://localhost:8000/```
 
 ### Test
- - This app uses Mocha, Chai-Http for `server test` and `jest` for `client test`
-   - Run npm i mocha -g to install Mocha globally and npm i nyc -g to install nyc globally before running npm test to run `server` tests
+ - This app uses Mocha, Chai-Http for `test`
+   - Run npm i mocha -g to install Mocha globally and npm i nyc -g to install nyc globally before running npm test to run tests
 
 + ```git clone https://github.com/QUDUSKUNLE/DevelopersContact```
 
-+ run ```npm test``` for ```server test```
-
-
- ### License
- 
-This software is licensed under the MIT License. See the <a href="https://github.com/QUDUSKUNLE/DevelopersContact/blob/develop/LICENCE">LICENSE</a> file in the top distribution directory for the full license text.
++ run ```npm test```
