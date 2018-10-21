@@ -31,11 +31,23 @@ if (!prod) {
   app.use(errorHandler());
 }
 
-// configure mongoose database
-mongoose.connect(process.env.DATABASE_HOST, { useMongoClient: true });
 mongoose.promise = global.Promise;
+// configure mongoose database
+if (process.env.NODE_ENV === 'test') {
+  mongoose.connect(process.env.MONGODB_URL_TEST, {
+    useMongoClient: true,
+    autoReconnect: true
+  });
+} else {
+  mongoose.connect(process.env.MONGODB_URL, {
+    useMongoClient: true,
+    autoReconnect: true
+  });
+}
 
 app.use('/api/v1', routes);
 app.get('/', (req, res) => res.json('Welcome to DevelopersContact Home'));
 
-app.listen(port, () => console.log(`Server running on PORT ${port}`));
+app.listen(port);
+
+module.exports = app;
