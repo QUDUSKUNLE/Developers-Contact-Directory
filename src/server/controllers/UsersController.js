@@ -93,6 +93,7 @@ export default {
         });
       }
       return res.status(200).json({
+        _id: response._id,
         message: 'Sign in successful',
         success: true,
         token: createToken(response),
@@ -111,12 +112,6 @@ export default {
     let user;
     try {
       user = await Users.findOne({ _id: req.params.id.trim() });
-      if (!user) {
-        return res.status(404).json({
-          success: false,
-          message: 'User does not exist'
-        });
-      }
       return res.status(200).json({
         user: {
           _id: user._id,
@@ -127,7 +122,13 @@ export default {
           stacks: user.stacks
         }
       });
-    } catch (e) { return res.status(500).json({ error: e }); }
+    } catch (e) {
+      return res.status(404).json({
+        error: e,
+        message: 'Invalid user id',
+        success: false
+      });
+    }
   },
 
   /**
@@ -193,7 +194,7 @@ export default {
   },
 
   /**
-   * Routes: GET: /api/v1/users/:id
+   * Routes: DELETE: /api/v1/users/:id
    * @description This fetch all ideas created by a user
    * @param {any} req user request object
    * @param {any} res server response
@@ -217,16 +218,7 @@ export default {
           .then(() => res.status(202).send({
             success: true,
             message: 'Account deleted successfully'
-          })).catch(error => res.status(500).send({
-            success: false,
-            error: error.message
           }));
-      }
-      if (!user) {
-        return res.status(404).send({
-          success: false,
-          error: 'User does not exist'
-        });
       }
     } catch (e) { return res.status(500).json({ error: e }); }
   },

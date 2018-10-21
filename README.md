@@ -1,5 +1,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://choosealicense.com/licenses/mit/)
 [![Build Status](https://travis-ci.org/QUDUSKUNLE/Developers-Contact-Directory.svg?branch=master)](https://travis-ci.org/QUDUSKUNLE/Developers-Contact-Directory)
+[![Coverage Status](https://coveralls.io/repos/github/QUDUSKUNLE/Developers-Contact-Directory/badge.svg?branch=master)](https://coveralls.io/github/QUDUSKUNLE/Developers-Contact-Directory?branch=master)
 
 ### DevelopersContant
 A simple CRUD that categories developer as either a front-end developer or backend developer

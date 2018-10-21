@@ -70,9 +70,9 @@ const validateRequestBody = (request) => {
             .notEmpty();
           request.check(
             'stack',
-            'Stack must not be more than 100 characters'
+            'Stack must not be more than 20 characters'
           )
-            .isLength({ max: 100 });
+            .isLength({ max: 20 });
           request.check(
             'stack',
             'Stack should contain only alphabets'

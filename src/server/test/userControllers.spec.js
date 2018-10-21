@@ -24,6 +24,16 @@ describe('User Controller test', () => {
         });
       });
     });
+    it('should get home message', (done) => {
+      chai.request(server)
+        .get('/')
+        .set('Content-Type', 'application/json')
+        .end((err, res) => {
+          res.should.have.status(200);
+          assert.equal('DevelopersContact Home', res.body.home);
+          done();
+        });
+    });
     it('should signup a new user', (done) => {
       chai.request(server)
         .post('/api/v1/signup')
@@ -297,12 +307,13 @@ describe('User Controller test', () => {
     // Test for update profile route
     describe('User Update profile route', () => {
       let validToken = '';
+      let id = '';
       before((done) => {
         chai.request(server)
           .post('/api/v1/signin')
           .send(user.signIn)
           .end((err, res) => {
-            if (err) return done(err);
+            id = res.body._id;
             validToken = res.body.token;
             done();
           });
@@ -324,6 +335,47 @@ describe('User Controller test', () => {
             });
         }
       );
+      it('should return Stack field cannot be empty to update', (done) => {
+        chai.request(server)
+          .put('/api/v1/profiles')
+          .set('x-access-token', validToken)
+          .type('application/json')
+          .send({
+            username: user.emptyPassword.username,
+            address: user.address,
+            location: user.location,
+            stack: ' ',
+            developer: user.developer
+          })
+          .end((err, res) => {
+            res.should.have.status(400);
+            assert.equal(false, res.body.success);
+            res.body.should.have.property('error')
+              .equals('Stack field cannot be empty');
+            done();
+          });
+      });
+      it(`should return Stack must not be more than 20
+       characters to update`, (done) => {
+        chai.request(server)
+          .put('/api/v1/profiles')
+          .set('x-access-token', validToken)
+          .type('application/json')
+          .send({
+            username: user.emptyPassword.username,
+            address: user.address,
+            location: user.location,
+            stack: user.stacks,
+            developer: user.developer
+          })
+          .end((err, res) => {
+            res.should.have.status(400);
+            assert.equal(false, res.body.success);
+            res.body.should.have.property('error')
+              .equals('Stack must not be more than 20 characters');
+            done();
+          });
+      });
       it(
         `should return profile updated successfully when passes
         new username and email to update`,
@@ -365,6 +417,112 @@ describe('User Controller test', () => {
               .equals('JsonWebTokenError');
             res.body.should.have.property('message')
               .equals('invalid signature');
+            done();
+          });
+      });
+
+      it('should return user not found for with invalid _id', (done) => {
+        const id_ = user._id;
+        chai.request(server)
+          .get(`/api/v1/developer/${id_}`)
+          .set('x-access-token', validToken)
+          .type('application/json')
+          .end((err, res) => {
+            res.should.have.status(404);
+            res.body.should.have.property('message')
+              .equals('Invalid user id');
+            done();
+          });
+      });
+
+      it('should return status code 200 on success', (done) => {
+        chai.request(server)
+          .get(`/api/v1/developer/${id}`)
+          .set('x-access-token', validToken)
+          .type('application/json')
+          .end((err, res) => {
+            res.should.have.status(200);
+            assert.equal(id, res.body.user._id);
+            done();
+          });
+      });
+
+      it('should be able to search for developers', (done) => {
+        chai.request(server)
+          .get('/api/v1/developers')
+          .set('x-access-token', validToken)
+          .type('application/json')
+          .end((err, res) => {
+            res.should.have.status(200);
+            res.body.should.have.property('developers');
+            res.body.should.have.property('pageInfo');
+            done();
+          });
+      });
+      it('should be able to search for developers base on stack', (done) => {
+        const developer = user.backend;
+        chai.request(server)
+          .get(`/api/v1/developers?developers=${developer}&offset=0&limit=10`)
+          .set('x-access-token', validToken)
+          .type('application/json')
+          .end((err, res) => {
+            res.should.have.status(200);
+            res.body.should.have.property('developers');
+            res.body.should.have.property('pageInfo');
+            done();
+          });
+      });
+      it('should return 401 for invalid credential', (done) => {
+        const userId = user._id;
+        chai.request(server)
+          .delete(`/api/v1/developers/${userId}`)
+          .set('x-access-token', validToken)
+          .set('Content-Type', 'application/json')
+          .end((err, res) => {
+            res.should.have.status(401);
+            assert.equal(res.body.success, false);
+            assert.equal(
+              'User`s not authorized to perform this operation',
+              res.body.error
+            );
+            done();
+          });
+      });
+      it('should return 403 without a valid token', (done) => {
+        const userId = user._id;
+        chai.request(server)
+          .delete(`/api/v1/developers/${userId}`)
+          .set('Content-Type', 'application/json')
+          .end((err, res) => {
+            res.should.have.status(403);
+            assert.equal('No valid token provided', res.body.error);
+            done();
+          });
+      });
+      it(`should return 401 for an expired token supplied
+      to delete an account`, (done) => {
+        const userId = user._id;
+        const expiredToken = { user };
+        chai.request(server)
+          .delete(`/api/v1/developers/${userId}`)
+          .set('x-access-token', expiredToken)
+          .set('Content-Type', 'application/json')
+          .end((err, res) => {
+            res.should.have.status(401);
+            assert.equal('JsonWebTokenError', res.body.name);
+            assert.equal('jwt malformed', res.body.message);
+            done();
+          });
+      });
+      it('should allow user`s to delete account', (done) => {
+        chai.request(server)
+          .delete(`/api/v1/developers/${id}`)
+          .set('x-access-token', validToken)
+          .set('Content-Type', 'application/json')
+          .end((err, res) => {
+            res.should.have.status(202);
+            assert.equal(res.body.success, true);
+            assert.equal('Account deleted successfully', res.body.message);
             done();
           });
       });
