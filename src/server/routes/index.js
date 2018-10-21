@@ -21,7 +21,7 @@ route.post(
 );
 
 /**
- * Route for signin users
+ * Route for signin developers
  */
 route.post(
   '/signin',
@@ -30,7 +30,7 @@ route.post(
 );
 
 /**
- * Route to query for a user
+ * Route to query for a developers
  */
 route.get(
   '/developer/:id',
@@ -38,7 +38,7 @@ route.get(
 );
 
 /**
- * Route to get all users and search for users
+ * Route to get developers and search for developers
  */
 route.get(
   '/developers',
@@ -46,7 +46,7 @@ route.get(
 );
 
 /**
- * Route for users to update profile
+ * Route for developers to update profile
  */
 route.put(
   '/profiles',
@@ -56,7 +56,7 @@ route.put(
 );
 
 /**
- * Route for a user to delete account
+ * Route for developers to delete account
  */
 route.delete(
   '/developers/:id',
@@ -66,7 +66,7 @@ route.delete(
 
 
 /**
- * Route for users to request for password reset
+ * Route for develoeprs to request for password reset
  */
 route.post(
   '/passwords',
@@ -75,7 +75,7 @@ route.post(
 );
 
 /**
- * Route for users to update password
+ * Route for developers to update password
  */
 route.put(
   '/passwords/:hash',
