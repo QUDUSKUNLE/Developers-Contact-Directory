@@ -3,12 +3,15 @@
 [![Coverage Status](https://coveralls.io/repos/github/QUDUSKUNLE/Developers-Contact-Directory/badge.svg?branch=master)](https://coveralls.io/github/QUDUSKUNLE/Developers-Contact-Directory?branch=master)
 
 #### DevelopersContant
-A simple CRUD that categories developer as either a Front-end or Backend or Fullstack Developer
+**A simple CRUD that categories developer as either a Front-end or Backend or Fullstack Developer**
 
 #### Feature
 DevelopersContact allows users to do the following.
- - Register and log into their accounts.
- - Users can search other developers based on Backend or Frontend or Fullstack developer
+ > Register and log into their accounts.
+ 
+ > Users can search other developers based on Backend or Frontend or Fullstack developer
+
+[API calls guidelines for this project](src/api.md)
 
 #### Folder Structure
 
