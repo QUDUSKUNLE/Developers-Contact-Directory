@@ -26,7 +26,7 @@ export default (email, name, hash, headers) => {
 
   // setup email data with unicode symbols
   const mailOptions = {
-    from: '"IdeaBox" <ideabox.idea@gmail.com>', // sender address
+    from: '"DevelopersContact" <ideabox.idea@gmail.com>', // sender address
     to: email,
     subject: 'Reset password', // Subject line
     html: `<body><div>
@@ -50,7 +50,7 @@ export default (email, name, hash, headers) => {
                       padding-left:20px; 
                       margin:0; 
                       font-size:30px;">
-                      IdeaBox</h4>
+                      DevelopersContact</h4>
                 </div>
                 <div style="padding:10px 20px;line-height:1.5em;color:#686f7a">
                   <p style="color:#737373">Hi ${name},</p>
@@ -59,7 +59,7 @@ export default (email, name, hash, headers) => {
                       padding-bottom:20px;
                       margin:20px 0;
                       color:#686f7a">
-                     You have requested to reset your password for IdeaBox account. Please click on the button below to reset your password.
+                     You have requested to reset your password for DevelopersContact account. Please click on the button below to reset your password.
                   </p>
               <p
                  style="position: absolute;left: 50%;
@@ -81,16 +81,6 @@ export default (email, name, hash, headers) => {
                       margin-top:50px;
                       color:#686f7a">
                       If you haven't made this request please ignore this message.
-                  </p>
-                  <p 
-                    style="padding-bottom:10px;
-                      margin-top:20px;
-                      color:#686f7a">
-                      Best regards, <br>
-                      IdeaBox Team.<br>
-                    <a href="https://ideaboxng.herokuapp.com"
-                      style="color: #141E26">https://ideaboxng.herokuapp.com
-                    </a>
                   </p>
                 </div>
              </div>

@@ -102,8 +102,7 @@ export default {
   },
 
   /**
-   * json Reset password email
-   * Routes: POST: /api/v1/developer/:id
+   * Routes: GET: /api/v1/developer/:id
    * @param {any} req user request object
    * @param {any} res server response
    * @returns {response} response object
@@ -133,7 +132,7 @@ export default {
 
   /**
    * Routes: GET: /api/v1/developers?developers=searchquery&offset=A&limit=B
-   * @description This fetch all ideas created by a user
+   * @description This search for developer based on Frontend etc
    * @param {any} req user request object
    * @param {any} res server response
    * @return {void}
@@ -194,8 +193,8 @@ export default {
   },
 
   /**
-   * Routes: DELETE: /api/v1/users/:id
-   * @description This fetch all ideas created by a user
+   * Routes: DELETE: /api/v1/developers/:id
+   * @description This deletes user`s account
    * @param {any} req user request object
    * @param {any} res server response
    * @return {void}
